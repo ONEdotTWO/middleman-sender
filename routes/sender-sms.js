@@ -22,6 +22,10 @@ router.get('/', function (req, res) {
     var sms_to = req.query.to;
     var sms_from = configuration.MIDDLEMAN_NUMBER;
     var sms_content = req.query.content;
+    if(sms_to == "" || sms_content == "")
+    {
+        res.status(400);
+    }
 
     clockwork.sendSms({To: sms_to, Content: sms_content, From: sms_from}, function (error, response) {
         if (error) {
