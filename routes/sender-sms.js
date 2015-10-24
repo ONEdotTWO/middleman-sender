@@ -1,22 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
+// Imports
+var fs = require('fs');
+var MongoClient = require('mongodb').MongoClient;
+
+// Defaults
+var configFile = 'bin/config.json';
+
+// Load config
+var configuration = JSON.parse(
+    fs.readFileSync(configFile)
+);
+
+// Configure clockwork
+var clockwork = require('clockwork')({key: configuration.API_KEY});
+
 /* Send SMS */
 router.get('/', function (req, res) {
-    // Imports
-    var fs = require('fs');
-    var MongoClient = require('mongodb').MongoClient;
-
-    // Defaults
-    var configFile = 'bin/config.json';
-
-    // Load config
-    var configuration = JSON.parse(
-        fs.readFileSync(configFile)
-    );
-
-    // Configure clockwork
-    var clockwork = require('clockwork')({key: configuration.API_KEY});
 
     // Test message
     var sms_to = req.query.to;
@@ -47,7 +48,7 @@ router.get('/', function (req, res) {
             });
         }
     });
-    res.json("{}");
+    res.json({});
 });
 
 module.exports = router;
