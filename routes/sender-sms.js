@@ -5,7 +5,6 @@ var router = express.Router();
 router.get('/', function (req, res) {
   // Imports
   var fs = require('fs');
-  var MongoClient = require('mongodb').MongoClient;
 
   // Defaults
   var configFile = 'bin/config.json';
@@ -28,22 +27,7 @@ router.get('/', function (req, res) {
   clockwork.sendSms({To: sms_to, Content: sms_content, From: sms_from}, function (error, response) {
     if (error) {
       console.log('Error', error);
-    } else {
-      // Connect to the db and submit change
-      MongoClient.connect(configuration.MONGO_URI, function (err, db) {
-        if (!err) {
-          var collection = db.collection('messages');
-          var document = {'to': sms_to, 'from': sms_from, 'message': sms_content};
-          collection.insert(document, {w: 1}, function (err, result) {
-            if (err) {
-              console.log("Couldn't send to database");
-            }
-          });
-        } else {
-          console.log("ERROR: Couldn't connect to remote mongo");
-        }
-      });
-    }
+    } 
   });
   res.json({});
 });
